@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kinder Spielewelt 🎮</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #1a1a2e;
+      --card: #16213e;
+      --accent1: #e94560;
+      --accent2: #0f3460;
+      --accent3: #533483;
+      --text: #eaeaea;
+      --radius: 16px;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== SCREENS ===== */
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: flex; flex-direction: column; align-items: center; }
+
+    /* ===== MENU ===== */
+    #menu {
+      justify-content: center;
+      padding: 40px 20px;
+      background: radial-gradient(ellipse at 50% 0%, #533483 0%, #1a1a2e 60%);
+    }
+    .menu-title {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #f9ca24, #f0932b, #e94560);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .menu-subtitle {
+      text-align: center;
+      font-size: 1.1rem;
+      opacity: .7;
+      margin-bottom: 48px;
+    }
+    .game-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      width: 100%;
+    }
+    .game-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      border: 2px solid transparent;
+      text-align: center;
+    }
+    .game-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.4);
+    }
+    .game-card .icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .game-card h2 { font-size: 1.25rem; margin-bottom: 8px; }
+    .game-card p { font-size: .9rem; opacity: .65; line-height: 1.5; }
+    .card-1 { border-color: #e94560; }
+    .card-1:hover { background: rgba(233,69,96,.12); }
+    .card-2 { border-color: #f9ca24; }
+    .card-2:hover { background: rgba(249,202,36,.12); }
+    .card-3 { border-color: #6ab04c; }
+    .card-3:hover { background: rgba(106,176,76,.12); }
+    .card-4 { border-color: #7ed6df; }
+    .card-4:hover { background: rgba(126,214,223,.12); }
+
+    /* ===== SHARED GAME UI ===== */
+    .game-header {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      gap: 16px;
+    }
+    .back-btn {
+      background: rgba(255,255,255,.1);
+      border: none;
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: .9rem;
+      transition: background .2s;
+    }
+    .back-btn:hover { background: rgba(255,255,255,.2); }
+    .game-title-bar { font-size: 1.2rem; font-weight: 700; flex: 1; }
+    .level-badge {
+      background: rgba(255,255,255,.15);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: .85rem;
+      font-weight: 600;
+    }
+    .game-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      width: 100%;
+    }
+    .game-msg {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      opacity: .8;
+      min-height: 28px;
+    }
+    .btn {
+      background: linear-gradient(135deg, var(--accent1), #c0392b);
+      border: none;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform .15s, opacity .15s;
+      margin: 6px;
+    }
+    .btn:hover { transform: scale(1.05); }
+    .btn.green { background: linear-gradient(135deg, #6ab04c, #218c74); }
+    .btn.blue  { background: linear-gradient(135deg, #4a90e2, #1a3c6e); }
+    .win-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.7);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+    }
+    .win-overlay.show { opacity: 1; pointer-events: all; }
+    .win-box {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 48px 40px;
+      text-align: center;
+      border: 3px solid #f9ca24;
+      transform: scale(.8);
+      transition: transform .3s;
+    }
+    .win-overlay.show .win-box { transform: scale(1); }
+    .win-box .trophy { font-size: 4rem; margin-bottom: 16px; }
+    .win-box h2 { font-size: 2rem; margin-bottom: 8px; color: #f9ca24; }
+    .win-box p { opacity: .7; margin-bottom: 24px; }
+
+    /* =====================
+       GAME 1: FARBPFAD
+    ===================== */
+    #farbpfad { background: radial-gradient(ellipse at 50% 0%, rgba(233,69,96,.25) 0%, var(--bg) 60%); }
+    #fp-canvas {
+      border-radius: 12px;
+      cursor: crosshair;
+      touch-action: none;
+      display: block;
+    }
+
+    /* =====================
+       GAME 2: SCHATTENRÄTSEL
+    ===================== */
+    #schatten { background: radial-gradient(ellipse at 50% 0%, rgba(249,202,36,.15) 0%, var(--bg) 60%); }
+    .shadow-display {
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 32px;
+      border: 2px solid rgba(255,255,255,.08);
+    }
+    .shadow-display svg { width: 140px; height: 140px; }
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 480px;
+      width: 100%;
+    }
+    .choice-btn {
+      background: var(--card);
+      border: 2px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 20px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      font-size: .9rem; color: var(--text);
+    }
+    .choice-btn:hover { border-color: #f9ca24; background: rgba(249,202,36,.08); }
+    .choice-btn svg { width: 80px; height: 80px; }
+    .choice-btn.correct { border-color: #6ab04c; background: rgba(106,176,76,.15); }
+    .choice-btn.wrong   { border-color: #e94560; background: rgba(233,69,96,.15); }
+    .score-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+    .score-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      transition: background .3s;
+    }
+    .score-dot.hit  { background: #6ab04c; }
+    .score-dot.miss { background: #e94560; }
+
+    /* =====================
+       GAME 3: SPIEGELLABYRINTH
+    ===================== */
+    #spiegel { background: radial-gradient(ellipse at 50% 0%, rgba(106,176,76,.2) 0%, var(--bg) 60%); }
+    #sl-canvas {
+      border-radius: 12px;
+      cursor: pointer;
+      display: block;
+    }
+    .mirror-hint { font-size: .85rem; opacity: .55; margin-top: 10px; text-align: center; }
+
+    /* =====================
+       GAME 4: ZAHLENSCHIEBER
+    ===================== */
+    #zahlen { background: radial-gradient(ellipse at 50% 0%, rgba(126,214,223,.2) 0%, var(--bg) 60%); }
+    #slider-grid {
+      display: inline-grid;
+      gap: 6px;
+      padding: 12px;
+      background: rgba(255,255,255,.05);
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+    .tile {
+      width: 72px; height: 72px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; font-weight: 800;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform .12s;
+      user-select: none;
+    }
+    .tile.num {
+      background: linear-gradient(135deg, #4a90e2, #1a3c6e);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+    }
+    .tile.num:hover { transform: scale(1.05); }
+    .tile.empty {
+      background: rgba(255,255,255,.05);
+      border: 2px dashed rgba(255,255,255,.1);
+      cursor: default;
+    }
+    .tile.correct-pos { background: linear-gradient(135deg, #6ab04c, #218c74) !important; }
+    .moves-counter { opacity: .65; font-size: .9rem; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+
+<!-- ==================== MENU ==================== -->
+<div id="menu" class="screen active">
+  <div class="menu-title">🎮 Kinder Spielewelt</div>
+  <div class="menu-subtitle">Wähle ein Spiel – Viel Spaß! 🌟</div>
+  <div class="game-cards">
+    <div class="game-card card-1" onclick="showGame('farbpfad')">
+      <div class="icon">🎨</div>
+      <h2>Farbpfad</h2>
+      <p>Verbinde gleiche Farben ohne dass sich die Linien berühren!</p>
+    </div>
+    <div class="game-card card-2" onclick="showGame('schatten')">
+      <div class="icon">🔦</div>
+      <h2>Schattenrätsel</h2>
+      <p>Welches Objekt wirft diesen Schatten? Rate das richtige!</p>
+    </div>
+    <div class="game-card card-3" onclick="showGame('spiegel')">
+      <div class="icon">🪞</div>
+      <h2>Spiegellabyrinth</h2>
+      <p>Drehe Spiegel damit der Lichtstrahl den Ausgang findet!</p>
+    </div>
+    <div class="game-card card-4" onclick="showGame('zahlen')">
+      <div class="icon">🔢</div>
+      <h2>Zahlenschieber</h2>
+      <p>Schiebe die Zahlen in die richtige Reihenfolge!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== WIN OVERLAY ==================== -->
+<div class="win-overlay" id="win-overlay">
+  <div class="win-box">
+    <div class="trophy">🏆</div>
+    <h2>Super gemacht!</h2>
+    <p id="win-msg">Weiter zum nächsten Level?</p>
+    <button class="btn green" id="win-next">Nächstes Level ▶</button>
+    <button class="btn" onclick="closeWin()">Menü 🏠</button>
+  </div>
+</div>
+
+<!-- ==================== FARBPFAD ==================== -->
+<div id="farbpfad" class="screen">
+  <div class="game-header">
+    <button class="back-btn" onclick="showMenu()">← Menü</button>
+    <span class="game-title-bar">🎨 Farbpfad</span>
+    <span class="level-badge" id="fp-level">Level 1</span>
+  </div>
+  <div class="game-area">
+    <div class="game-msg" id="fp-msg">Verbinde alle gleichen Farben!</div>
+    <canvas id="fp-canvas"></canvas>
+    <div style="margin-top:12px">
+      <button class="btn" onclick="fpReset()">↺ Neu starten</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCHATTENRÄTSEL ==================== -->
+<div id="schatten" class="screen">
+  <div class="game-header">
+    <button class="back-btn" onclick="showMenu()">← Menü</button>
+    <span class="game-title-bar">🔦 Schattenrätsel</span>
+    <span class="level-badge" id="sr-level">Frage 1</span>
+  </div>
+  <div class="game-area">
+    <div class="score-bar" id="sr-score"></div>
+    <div class="shadow-display">
+      <svg id="sr-shadow" viewBox="0 0 100 100"></svg>
+    </div>
+    <div class="game-msg" id="sr-msg">Welches Objekt passt zum Schatten?</div>
+    <div class="choices" id="sr-choices"></div>
+  </div>
+</div>
+
+<!-- ==================== SPIEGELLABYRINTH ==================== -->
+<div id="spiegel" class="screen">
+  <div class="game-header">
+    <button class="back-btn" onclick="showMenu()">← Menü</button>
+    <span class="game-title-bar">🪞 Spiegellabyrinth</span>
+    <span class="level-badge" id="sl-level">Level 1</span>
+  </div>
+  <div class="game-area">
+    <div class="game-msg" id="sl-msg">Klicke auf Spiegel um sie zu drehen!</div>
+    <canvas id="sl-canvas"></canvas>
+    <div class="mirror-hint">Klick = Spiegel drehen · Bringt den Lichtstrahl zum ⭐</div>
+    <div style="margin-top:10px">
+      <button class="btn" onclick="slReset()">↺ Neu starten</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ZAHLENSCHIEBER ==================== -->
+<div id="zahlen" class="screen">
+  <div class="game-header">
+    <button class="back-btn" onclick="showMenu()">← Menü</button>
+    <span class="game-title-bar">🔢 Zahlenschieber</span>
+    <span class="level-badge" id="zs-level">Level 1</span>
+  </div>
+  <div class="game-area">
+    <div class="game-msg" id="zs-msg">Schiebe die Zahlen in die richtige Reihenfolge!</div>
+    <div class="moves-counter" id="zs-moves">Züge: 0</div>
+    <div id="slider-grid"></div>
+    <button class="btn" onclick="zsInit()">↺ Neu mischen</button>
+  </div>
+</div>
+
+<script>
+// ================================================================
+//  NAVIGATION
+// ================================================================
+let currentGame = null;
+
+function showGame(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentGame = id;
+  if (id === 'farbpfad') fpInit();
+  if (id === 'schatten') srInit();
+  if (id === 'spiegel')  slInit();
+  if (id === 'zahlen')   zsInit();
+}
+
+function showMenu() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('menu').classList.add('active');
+  currentGame = null;
+}
+
+function showWin(msg, nextFn) {
+  document.getElementById('win-msg').textContent = msg;
+  const ov = document.getElementById('win-overlay');
+  ov.classList.add('show');
+  document.getElementById('win-next').onclick = () => { closeWin(); nextFn(); };
+}
+
+function closeWin() {
+  document.getElementById('win-overlay').classList.remove('show');
+  if (currentGame === null) showMenu();
+}
+
+// ================================================================
+//  GAME 1 – FARBPFAD (Flow Free)
+// ================================================================
+const FP_COLORS = ['#e94560','#f9ca24','#6ab04c','#4a90e2','#e056fd','#ff9f43'];
+const FP_LEVELS = [
+  // Each level: gridSize, dots array [{r,c,color}]
+  { size: 4, dots: [{r:0,c:0,ci:0},{r:3,c:3,ci:0},{r:0,c:3,ci:1},{r:3,c:0,ci:1},{r:1,c:1,ci:2},{r:2,c:2,ci:2}] },
+  { size: 4, dots: [{r:0,c:0,ci:0},{r:2,c:3,ci:0},{r:0,c:2,ci:1},{r:3,c:1,ci:1},{r:1,c:0,ci:2},{r:3,c:3,ci:2},{r:0,c:3,ci:3},{r:2,c:0,ci:3}] },
+  { size: 5, dots: [{r:0,c:0,ci:0},{r:4,c:4,ci:0},{r:0,c:4,ci:1},{r:4,c:0,ci:1},{r:0,c:2,ci:2},{r:4,c:2,ci:2},{r:2,c:0,ci:3},{r:2,c:4,ci:3},{r:1,c:2,ci:4},{r:3,c:2,ci:4}] },
+  { size: 5, dots: [{r:0,c:0,ci:0},{r:3,c:2,ci:0},{r:0,c:3,ci:1},{r:2,c:4,ci:1},{r:1,c:1,ci:2},{r:4,c:3,ci:2},{r:0,c:4,ci:3},{r:4,c:0,ci:3},{r:2,c:2,ci:4},{r:4,c:4,ci:4}] },
+  { size: 6, dots: [{r:0,c:0,ci:0},{r:5,c:5,ci:0},{r:0,c:5,ci:1},{r:5,c:0,ci:1},{r:0,c:2,ci:2},{r:5,c:3,ci:2},{r:2,c:0,ci:3},{r:3,c:5,ci:3},{r:1,c:3,ci:4},{r:4,c:2,ci:4},{r:2,c:5,ci:5},{r:4,c:0,ci:5}] },
+  { size: 6, dots: [{r:0,c:0,ci:0},{r:4,c:3,ci:0},{r:0,c:5,ci:1},{r:5,c:0,ci:1},{r:1,c:1,ci:2},{r:3,c:4,ci:2},{r:0,c:3,ci:3},{r:5,c:5,ci:3},{r:2,c:0,ci:4},{r:3,c:5,ci:4},{r:1,c:4,ci:5},{r:5,c:2,ci:5}] },
+];
+
+let fpLevel = 0;
+let fpState = {};
+
+function fpInit() {
+  fpLevel = Math.min(fpLevel, FP_LEVELS.length - 1);
+  document.getElementById('fp-level').textContent = `Level ${fpLevel + 1}`;
+  fpBuild();
+}
+
+function fpBuild() {
+  const lv = FP_LEVELS[fpLevel];
+  const canvas = document.getElementById('fp-canvas');
+  const size   = lv.size;
+  const cell   = Math.min(Math.floor((Math.min(window.innerWidth, 520) - 40) / size), 80);
+  canvas.width  = cell * size;
+  canvas.height = cell * size;
+
+  fpState = {
+    size, cell,
+    grid: Array.from({length:size}, () => Array(size).fill(-1)),
+    dots: lv.dots,
+    paths: Array.from({length: FP_COLORS.length}, () => []),
+    drawing: -1,
+    currentPath: []
+  };
+
+  // Place dots on grid
+  lv.dots.forEach(d => fpState.grid[d.r][d.c] = d.ci);
+  fpDraw();
+  document.getElementById('fp-msg').textContent = 'Verbinde alle gleichen Farben!';
+}
+
+function fpReset() { fpBuild(); }
+
+function fpDraw() {
+  const { size, cell, grid, dots, paths, drawing, currentPath } = fpState;
+  const canvas = document.getElementById('fp-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Background grid
+  ctx.fillStyle = 'rgba(255,255,255,0.03)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  for (let r = 0; r <= size; r++) {
+    ctx.beginPath(); ctx.moveTo(0, r*cell); ctx.lineTo(size*cell, r*cell); ctx.stroke();
+  }
+  for (let c = 0; c <= size; c++) {
+    ctx.beginPath(); ctx.moveTo(c*cell, 0); ctx.lineTo(c*cell, size*cell); ctx.stroke();
+  }
+
+  // Draw paths
+  paths.forEach((path, ci) => {
+    if (!path.length) return;
+    ctx.beginPath();
+    ctx.moveTo(path[0].c * cell + cell/2, path[0].r * cell + cell/2);
+    path.forEach(p => ctx.lineTo(p.c * cell + cell/2, p.r * cell + cell/2));
+    ctx.strokeStyle = FP_COLORS[ci];
+    ctx.lineWidth = cell * 0.38;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = 0.6;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  });
+
+  // Draw current drawing path
+  if (drawing >= 0 && currentPath.length > 0) {
+    ctx.beginPath();
+    ctx.moveTo(currentPath[0].c * cell + cell/2, currentPath[0].r * cell + cell/2);
+    currentPath.forEach(p => ctx.lineTo(p.c * cell + cell/2, p.r * cell + cell/2));
+    ctx.strokeStyle = FP_COLORS[drawing];
+    ctx.lineWidth = cell * 0.38;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = 0.8;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // Draw dots
+  dots.forEach(d => {
+    const x = d.c * cell + cell/2;
+    const y = d.r * cell + cell/2;
+    const r = cell * 0.28;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.fillStyle = FP_COLORS[d.ci];
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+  });
+}
+
+function fpGetCell(canvas, e) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const x = clientX - rect.left;
+  const y = clientY - rect.top;
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return {
+    c: Math.floor(x * scaleX / fpState.cell),
+    r: Math.floor(y * scaleY / fpState.cell)
+  };
+}
+
+function fpInBounds(r, c) {
+  return r >= 0 && c >= 0 && r < fpState.size && c < fpState.size;
+}
+
+function fpIsDot(r, c) {
+  return fpState.dots.some(d => d.r === r && d.c === c);
+}
+
+function fpDotColor(r, c) {
+  const d = fpState.dots.find(d => d.r === r && d.c === c);
+  return d ? d.ci : -1;
+}
+
+function fpStartDraw(e) {
+  e.preventDefault();
+  const canvas = document.getElementById('fp-canvas');
+  const { r, c } = fpGetCell(canvas, e);
+  if (!fpInBounds(r, c)) return;
+
+  const ci = fpDotColor(r, c);
+  if (ci < 0) return; // only start from dots
+
+  // Clear existing path for this color
+  fpState.paths[ci] = [];
+  fpState.drawing = ci;
+  fpState.currentPath = [{ r, c }];
+  fpDraw();
+}
+
+function fpMoveDraw(e) {
+  e.preventDefault();
+  if (fpState.drawing < 0) return;
+  const canvas = document.getElementById('fp-canvas');
+  const { r, c } = fpGetCell(canvas, e);
+  if (!fpInBounds(r, c)) return;
+
+  const path = fpState.currentPath;
+  const last = path[path.length - 1];
+  if (last.r === r && last.c === c) return;
+
+  // Check adjacency
+  if (Math.abs(r - last.r) + Math.abs(c - last.c) !== 1) return;
+
+  // Check if we're backtracking
+  if (path.length >= 2) {
+    const prev = path[path.length - 2];
+    if (prev.r === r && prev.c === c) {
+      fpState.currentPath.pop();
+      fpDraw();
+      return;
+    }
+  }
+
+  // Check if cell is occupied by another path
+  const ci = fpState.drawing;
+  for (let oci = 0; oci < FP_COLORS.length; oci++) {
+    if (oci === ci) continue;
+    if (fpState.paths[oci].some(p => p.r === r && p.c === c)) return;
+  }
+  if (path.some(p => p.r === r && p.c === c)) return;
+
+  // Stop if we hit a dot of the same color (endpoint)
+  const dotCi = fpDotColor(r, c);
+  if (dotCi >= 0 && dotCi !== ci) return;
+
+  path.push({ r, c });
+  fpDraw();
+
+  // Check if endpoint reached
+  if (dotCi === ci && path.length > 1) {
+    fpState.paths[ci] = [...path];
+    fpState.drawing = -1;
+    fpState.currentPath = [];
+    fpDraw();
+    fpCheckWin();
+  }
+}
+
+function fpEndDraw(e) {
+  if (fpState.drawing >= 0) {
+    fpState.drawing = -1;
+    fpState.currentPath = [];
+    fpDraw();
+  }
+}
+
+function fpCheckWin() {
+  const { size, dots, paths } = fpState;
+  const colorPairs = [...new Set(dots.map(d => d.ci))];
+  const allConnected = colorPairs.every(ci => {
+    const path = paths[ci];
+    if (!path.length) return false;
+    const ends = dots.filter(d => d.ci === ci);
+    const a = path[0], b = path[path.length - 1];
+    return (
+      ends.some(d => d.r === a.r && d.c === a.c) &&
+      ends.some(d => d.r === b.r && d.c === b.c) &&
+      path.length > 1
+    );
+  });
+
+  const totalCells = size * size;
+  const filledCells = new Set(
+    paths.flatMap(p => p.map(c => `${c.r},${c.c}`))
+  ).size;
+
+  if (allConnected && filledCells === totalCells) {
+    fpLevel = Math.min(fpLevel + 1, FP_LEVELS.length - 1);
+    const isLast = fpLevel === FP_LEVELS.length - 1;
+    showWin(
+      isLast ? '🎉 Alle Level geschafft! Du bist ein Profi!' : `Level ${fpLevel} abgeschlossen! Weiter?`,
+      () => fpBuild()
+    );
+  }
+}
+
+(function initFpEvents() {
+  const canvas = document.getElementById('fp-canvas');
+  canvas.addEventListener('mousedown',  fpStartDraw);
+  canvas.addEventListener('mousemove',  fpMoveDraw);
+  canvas.addEventListener('mouseup',    fpEndDraw);
+  canvas.addEventListener('touchstart', fpStartDraw, { passive: false });
+  canvas.addEventListener('touchmove',  fpMoveDraw,  { passive: false });
+  canvas.addEventListener('touchend',   fpEndDraw);
+})();
+
+
+// ================================================================
+//  GAME 2 – SCHATTENRÄTSEL
+// ================================================================
+const SR_OBJECTS = [
+  {
+    name: 'Apfel', color: '#e84393',
+    svg: `<circle cx="50" cy="55" r="35" fill="{c}"/>
+          <path d="M50 20 Q55 10 60 18" stroke="{c}" stroke-width="4" fill="none"/>
+          <path d="M47 22 Q40 14 44 10" stroke="#6ab04c" stroke-width="3" fill="none"/>`,
+    shadowSvg: `<circle cx="50" cy="55" r="35"/>
+                <path d="M50 20 Q55 10 60 18" stroke="black" stroke-width="4" fill="none"/>`,
+  },
+  {
+    name: 'Stern', color: '#f9ca24',
+    svg: `<polygon points="50,10 61,35 88,35 66,55 73,80 50,63 27,80 34,55 12,35 39,35" fill="{c}"/>`,
+    shadowSvg: `<polygon points="50,10 61,35 88,35 66,55 73,80 50,63 27,80 34,55 12,35 39,35"/>`,
+  },
+  {
+    name: 'Haus', color: '#4a90e2',
+    svg: `<polygon points="50,10 90,45 10,45" fill="{c}"/>
+          <rect x="20" y="45" width="60" height="45" fill="{c}"/>
+          <rect x="40" y="65" width="20" height="25" fill="rgba(0,0,0,0.25)"/>`,
+    shadowSvg: `<polygon points="50,10 90,45 10,45"/>
+                <rect x="20" y="45" width="60" height="45"/>`,
+  },
+  {
+    name: 'Schmetterling', color: '#e056fd',
+    svg: `<ellipse cx="30" cy="35" rx="25" ry="20" fill="{c}" opacity="0.9"/>
+          <ellipse cx="70" cy="35" rx="25" ry="20" fill="{c}" opacity="0.9"/>
+          <ellipse cx="30" cy="65" rx="18" ry="15" fill="{c}" opacity="0.7"/>
+          <ellipse cx="70" cy="65" rx="18" ry="15" fill="{c}" opacity="0.7"/>
+          <rect x="48" y="20" width="4" height="60" rx="2" fill="#555"/>`,
+    shadowSvg: `<ellipse cx="30" cy="35" rx="25" ry="20"/>
+                <ellipse cx="70" cy="35" rx="25" ry="20"/>
+                <ellipse cx="30" cy="65" rx="18" ry="15"/>
+                <ellipse cx="70" cy="65" rx="18" ry="15"/>
+                <rect x="48" y="20" width="4" height="60" rx="2"/>`,
+  },
+  {
+    name: 'Fisch', color: '#7ed6df',
+    svg: `<ellipse cx="45" cy="50" rx="35" ry="20" fill="{c}"/>
+          <polygon points="80,50 100,30 100,70" fill="{c}"/>
+          <circle cx="25" cy="45" r="4" fill="rgba(0,0,0,0.4)"/>`,
+    shadowSvg: `<ellipse cx="45" cy="50" rx="35" ry="20"/>
+                <polygon points="80,50 100,30 100,70"/>`,
+  },
+  {
+    name: 'Blume', color: '#ff9f43',
+    svg: `<circle cx="50" cy="50" r="15" fill="#f9ca24"/>
+          <ellipse cx="50" cy="22" rx="12" ry="16" fill="{c}"/>
+          <ellipse cx="50" cy="78" rx="12" ry="16" fill="{c}"/>
+          <ellipse cx="22" cy="50" rx="16" ry="12" fill="{c}"/>
+          <ellipse cx="78" cy="50" rx="16" ry="12" fill="{c}"/>`,
+    shadowSvg: `<circle cx="50" cy="50" r="15"/>
+                <ellipse cx="50" cy="22" rx="12" ry="16"/>
+                <ellipse cx="50" cy="78" rx="12" ry="16"/>
+                <ellipse cx="22" cy="50" rx="16" ry="12"/>
+                <ellipse cx="78" cy="50" rx="16" ry="12"/>`,
+  },
+  {
+    name: 'Rakete', color: '#e94560',
+    svg: `<polygon points="50,5 65,50 50,45 35,50" fill="{c}"/>
+          <rect x="35" y="45" width="30" height="35" fill="{c}"/>
+          <polygon points="35,80 20,95 50,80" fill="#f9ca24"/>
+          <polygon points="65,80 80,95 50,80" fill="#f9ca24"/>
+          <circle cx="50" cy="58" r="8" fill="rgba(0,0,0,0.3)"/>`,
+    shadowSvg: `<polygon points="50,5 65,50 50,45 35,50"/>
+                <rect x="35" y="45" width="30" height="35"/>
+                <polygon points="35,80 20,95 50,80"/>
+                <polygon points="65,80 80,95 50,80"/>`,
+  },
+  {
+    name: 'Herz', color: '#e94560',
+    svg: `<path d="M50 80 C10 55 5 25 25 18 C35 14 45 20 50 30 C55 20 65 14 75 18 C95 25 90 55 50 80Z" fill="{c}"/>`,
+    shadowSvg: `<path d="M50 80 C10 55 5 25 25 18 C35 14 45 20 50 30 C55 20 65 14 75 18 C95 25 90 55 50 80Z"/>`,
+  },
+  {
+    name: 'Wolke', color: '#b2bec3',
+    svg: `<circle cx="35" cy="55" r="20" fill="{c}"/>
+          <circle cx="55" cy="45" r="25" fill="{c}"/>
+          <circle cx="72" cy="55" r="18" fill="{c}"/>
+          <rect x="20" y="55" width="70" height="20" fill="{c}"/>`,
+    shadowSvg: `<circle cx="35" cy="55" r="20"/>
+                <circle cx="55" cy="45" r="25"/>
+                <circle cx="72" cy="55" r="18"/>
+                <rect x="20" y="55" width="70" height="20"/>`,
+  },
+  {
+    name: 'Baum', color: '#6ab04c',
+    svg: `<polygon points="50,5 80,50 20,50" fill="{c}"/>
+          <polygon points="50,25 85,70 15,70" fill="{c}"/>
+          <rect x="44" y="70" width="12" height="25" fill="#795548"/>`,
+    shadowSvg: `<polygon points="50,5 80,50 20,50"/>
+                <polygon points="50,25 85,70 15,70"/>
+                <rect x="44" y="70" width="12" height="25"/>`,
+  },
+];
+
+let srLevel   = 0;
+let srScore   = [];
+let srCorrect = 0;
+const SR_TOTAL = 8;
+let srAnswered = false;
+
+function srInit() {
+  srLevel = 0;
+  srScore = [];
+  srCorrect = 0;
+  srAnswered = false;
+  document.getElementById('sr-level').textContent = `Frage 1 / ${SR_TOTAL}`;
+  srAsk();
+}
+
+function srAsk() {
+  srAnswered = false;
+  document.getElementById('sr-level').textContent = `Frage ${srLevel + 1} / ${SR_TOTAL}`;
+  document.getElementById('sr-msg').textContent = 'Welches Objekt passt zum Schatten?';
+
+  // Build score dots
+  const scoreEl = document.getElementById('sr-score');
+  scoreEl.innerHTML = '';
+  for (let i = 0; i < SR_TOTAL; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'score-dot' + (i < srScore.length ? (srScore[i] ? ' hit' : ' miss') : '');
+    scoreEl.appendChild(dot);
+  }
+
+  // Pick target object (cycling through all)
+  const pool = [...SR_OBJECTS];
+  // shuffle deterministically based on level
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = (i * 7 + srLevel * 13) % (i + 1);
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const target = pool[srLevel % pool.length];
+
+  // Show shadow
+  const shadowSvg = document.getElementById('sr-shadow');
+  shadowSvg.innerHTML = `<g fill="#1a1a2e" opacity="0.95">${target.shadowSvg}</g>`;
+
+  // Build choices: target + 3 random wrong
+  const others = pool.filter(o => o.name !== target.name);
+  const wrongs = others.slice(0, 3);
+  const choices = [target, ...wrongs].sort(() => 0.5 - Math.random());
+
+  const choicesEl = document.getElementById('sr-choices');
+  choicesEl.innerHTML = '';
+  choices.forEach(obj => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    const coloredSvg = `<svg viewBox="0 0 100 100">${obj.svg.replace(/\{c\}/g, obj.color)}</svg>`;
+    btn.innerHTML = coloredSvg + `<span>${obj.name}</span>`;
+    btn.onclick = () => srAnswer(btn, obj.name === target.name, choices, target);
+    choicesEl.appendChild(btn);
+  });
+}
+
+function srAnswer(btn, correct, choices, target) {
+  if (srAnswered) return;
+  srAnswered = true;
+
+  srScore.push(correct);
+  if (correct) srCorrect++;
+
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) {
+    // highlight correct
+    document.querySelectorAll('.choice-btn').forEach(b => {
+      if (b.querySelector('span')?.textContent === target.name) b.classList.add('correct');
+    });
+  }
+
+  document.getElementById('sr-msg').textContent = correct ? '✅ Richtig! Super!' : `❌ Das war ${target.name}!`;
+
+  setTimeout(() => {
+    srLevel++;
+    if (srLevel >= SR_TOTAL) {
+      showWin(`Du hattest ${srCorrect} von ${SR_TOTAL} richtig! 🌟`, () => srInit());
+    } else {
+      srAsk();
+    }
+  }, 1400);
+}
+
+
+// ================================================================
+//  GAME 3 – SPIEGELLABYRINTH
+// ================================================================
+// Mirror types: '/' or '\' (reflect light)
+// Each cell can be: null, '/', '\'
+// Light starts from left edge row 0, going right
+// Goal: reach the star (exit)
+
+const SL_LEVELS = [
+  {
+    size: 5,
+    mirrors: [ // {r, c, type, fixed}
+      {r:1, c:1, type:'/', fixed:false},
+      {r:1, c:3, type:'\\', fixed:false},
+      {r:3, c:2, type:'/', fixed:false},
+    ],
+    lightEntry: {r:0, dir:'right'}, // enters col 0, row 0, going right
+    exit: {r:4, c:4},
+  },
+  {
+    size: 5,
+    mirrors: [
+      {r:0, c:2, type:'\\', fixed:false},
+      {r:2, c:2, type:'/', fixed:false},
+      {r:2, c:4, type:'\\', fixed:false},
+      {r:4, c:4, type:'/', fixed:true},
+    ],
+    lightEntry: {r:0, dir:'right'},
+    exit: {r:4, c:0},
+  },
+  {
+    size: 6,
+    mirrors: [
+      {r:0, c:2, type:'/', fixed:false},
+      {r:2, c:2, type:'\\', fixed:false},
+      {r:2, c:4, type:'/', fixed:false},
+      {r:4, c:4, type:'\\', fixed:false},
+      {r:4, c:1, type:'/', fixed:false},
+    ],
+    lightEntry: {r:0, dir:'right'},
+    exit: {r:5, c:1},
+  },
+  {
+    size: 6,
+    mirrors: [
+      {r:0, c:3, type:'\\', fixed:true},
+      {r:2, c:3, type:'/', fixed:false},
+      {r:2, c:0, type:'\\', fixed:false},
+      {r:4, c:0, type:'/', fixed:false},
+      {r:4, c:5, type:'\\', fixed:false},
+      {r:1, c:5, type:'/', fixed:false},
+    ],
+    lightEntry: {r:0, dir:'right'},
+    exit: {r:0, c:5},
+  },
+  {
+    size: 7,
+    mirrors: [
+      {r:0, c:1, type:'\\', fixed:false},
+      {r:2, c:1, type:'/', fixed:false},
+      {r:2, c:5, type:'\\', fixed:false},
+      {r:5, c:5, type:'/', fixed:false},
+      {r:5, c:2, type:'\\', fixed:false},
+      {r:3, c:2, type:'/', fixed:false},
+      {r:3, c:4, type:'\\', fixed:false},
+    ],
+    lightEntry: {r:0, dir:'right'},
+    exit: {r:6, c:4},
+  },
+];
+
+let slLevel = 0;
+let slState = {};
+
+function slInit() {
+  slLevel = Math.min(slLevel, SL_LEVELS.length - 1);
+  document.getElementById('sl-level').textContent = `Level ${slLevel + 1}`;
+  slBuild();
+}
+
+function slBuild() {
+  const lv = SL_LEVELS[slLevel];
+  const size = lv.size;
+  const cell = Math.min(Math.floor((Math.min(window.innerWidth, 520) - 40) / size), 75);
+
+  slState = {
+    size, cell,
+    mirrors: lv.mirrors.map(m => ({...m})),
+    lightEntry: lv.lightEntry,
+    exit: lv.exit,
+    lv,
+  };
+
+  const canvas = document.getElementById('sl-canvas');
+  canvas.width  = cell * size;
+  canvas.height = cell * size;
+
+  slDraw();
+  document.getElementById('sl-msg').textContent = 'Klicke auf Spiegel um sie zu drehen!';
+}
+
+function slReset() { slBuild(); }
+
+function slTrace() {
+  const { size, mirrors, lightEntry, exit } = slState;
+  // returns list of {r,c} segment points
+  const mirrorMap = {};
+  mirrors.forEach(m => mirrorMap[`${m.r},${m.c}`] = m.type);
+
+  const segments = [];
+  let r = lightEntry.r, c = -1;
+  let dr = 0, dc = 1; // going right initially
+
+  const visited = new Set();
+  let x = r, y = c;
+
+  for (let step = 0; step < size * size * 4 + 10; step++) {
+    const nx = x + dr, ny = y + dc;
+    segments.push({r: x, c: y, er: nx, ec: ny});
+
+    if (nx === exit.r && ny === exit.c) {
+      segments.push({r: nx, c: ny, er: nx, ec: ny, isExit: true});
+      return { segments, reached: true };
+    }
+
+    if (nx < 0 || nx >= size || ny < 0 || ny >= size) {
+      return { segments, reached: false };
+    }
+
+    const key = `${nx},${ny}`;
+    if (visited.has(`${key}:${dr},${dc}`)) return { segments, reached: false };
+    visited.add(`${key}:${dr},${dc}`);
+
+    const mType = mirrorMap[key];
+    if (mType === '/') {
+      [dr, dc] = [-dc, -dr];
+    } else if (mType === '\\') {
+      [dr, dc] = [dc, dr];
+    }
+
+    x = nx; y = ny;
+  }
+  return { segments, reached: false };
+}
+
+function slDraw() {
+  const { size, cell, mirrors, exit } = slState;
+  const canvas = document.getElementById('sl-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Grid background
+  ctx.fillStyle = 'rgba(255,255,255,0.03)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= size; i++) {
+    ctx.beginPath(); ctx.moveTo(0, i*cell); ctx.lineTo(size*cell, i*cell); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(i*cell, 0); ctx.lineTo(i*cell, size*cell); ctx.stroke();
+  }
+
+  // Trace light
+  const { segments, reached } = slTrace();
+  ctx.strokeStyle = reached ? '#f9ca24' : 'rgba(255,255,100,0.5)';
+  ctx.lineWidth = 3;
+  ctx.shadowColor = reached ? '#f9ca24' : 'rgba(255,255,0,0.4)';
+  ctx.shadowBlur = reached ? 12 : 6;
+  segments.forEach(seg => {
+    const sx = seg.c * cell + cell/2;
+    const sy = seg.r * cell + cell/2;
+    const ex = seg.ec * cell + cell/2;
+    const ey = seg.er * cell + cell/2;
+    ctx.beginPath();
+    ctx.moveTo(Math.max(-cell/2, Math.min(sx, size*cell + cell/2)),
+               Math.max(-cell/2, Math.min(sy, size*cell + cell/2)));
+    ctx.lineTo(Math.max(-cell/2, Math.min(ex, size*cell + cell/2)),
+               Math.max(-cell/2, Math.min(ey, size*cell + cell/2)));
+    ctx.stroke();
+  });
+  ctx.shadowBlur = 0;
+
+  // Draw exit star
+  ctx.font = `${cell * 0.6}px serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('⭐', exit.c * cell + cell/2, exit.r * cell + cell/2);
+
+  // Draw light entry arrow
+  ctx.font = `${cell * 0.5}px serif`;
+  ctx.fillText('➡', -cell/2, slState.lightEntry.r * cell + cell/2);
+
+  // Draw mirrors
+  mirrors.forEach(m => {
+    const x = m.c * cell;
+    const y = m.r * cell;
+    const pad = cell * 0.15;
+
+    if (m.fixed) {
+      ctx.fillStyle = 'rgba(150,150,255,0.15)';
+      ctx.fillRect(x + pad/2, y + pad/2, cell - pad, cell - pad);
+    }
+
+    ctx.strokeStyle = m.fixed ? '#b2bec3' : '#7ed6df';
+    ctx.lineWidth = 3.5;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    if (m.type === '/') {
+      ctx.moveTo(x + cell - pad, y + pad);
+      ctx.lineTo(x + pad, y + cell - pad);
+    } else {
+      ctx.moveTo(x + pad, y + pad);
+      ctx.lineTo(x + cell - pad, y + cell - pad);
+    }
+    ctx.stroke();
+
+    if (!m.fixed) {
+      ctx.fillStyle = 'rgba(126,214,223,0.15)';
+      ctx.beginPath();
+      ctx.arc(x + cell/2, y + cell/2, cell * 0.38, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+}
+
+document.getElementById('sl-canvas').addEventListener('click', function(e) {
+  const canvas = this;
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+  const c = Math.floor(x / slState.cell);
+  const r = Math.floor(y / slState.cell);
+
+  const mirror = slState.mirrors.find(m => m.r === r && m.c === c && !m.fixed);
+  if (!mirror) return;
+
+  mirror.type = mirror.type === '/' ? '\\' : '/';
+  slDraw();
+
+  const { reached } = slTrace();
+  if (reached) {
+    slDraw();
+    setTimeout(() => {
+      slLevel = Math.min(slLevel + 1, SL_LEVELS.length - 1);
+      const isLast = slLevel === SL_LEVELS.length - 1;
+      showWin(
+        isLast ? '🎉 Alle Labyrinthe gelöst!' : `Level ${slLevel} gelöst! Weiter?`,
+        () => slBuild()
+      );
+    }, 400);
+  }
+});
+
+
+// ================================================================
+//  GAME 4 – ZAHLENSCHIEBER
+// ================================================================
+const ZS_SIZES = [3, 3, 4, 4, 5]; // grid sizes per level
+let zsLevel = 0;
+let zsGrid  = [];
+let zsMoves = 0;
+let zsSize  = 3;
+
+function zsInit() {
+  zsSize = ZS_SIZES[Math.min(zsLevel, ZS_SIZES.length - 1)];
+  document.getElementById('zs-level').textContent = `Level ${zsLevel + 1} (${zsSize}×${zsSize})`;
+  zsMoves = 0;
+  document.getElementById('zs-moves').textContent = 'Züge: 0';
+
+  // Create solved state
+  const total = zsSize * zsSize;
+  zsGrid = Array.from({length: total}, (_, i) => (i === total - 1 ? 0 : i + 1));
+
+  // Shuffle with valid moves
+  let emptyIdx = total - 1;
+  for (let i = 0; i < total * 20; i++) {
+    const neighbors = zsNeighbors(emptyIdx);
+    const pick = neighbors[Math.floor(Math.random() * neighbors.length)];
+    [zsGrid[emptyIdx], zsGrid[pick]] = [zsGrid[pick], zsGrid[emptyIdx]];
+    emptyIdx = pick;
+  }
+
+  zsRender();
+}
+
+function zsNeighbors(idx) {
+  const r = Math.floor(idx / zsSize);
+  const c = idx % zsSize;
+  const n = [];
+  if (r > 0) n.push(idx - zsSize);
+  if (r < zsSize - 1) n.push(idx + zsSize);
+  if (c > 0) n.push(idx - 1);
+  if (c < zsSize - 1) n.push(idx + 1);
+  return n;
+}
+
+function zsRender() {
+  const grid = document.getElementById('slider-grid');
+  grid.style.gridTemplateColumns = `repeat(${zsSize}, 1fr)`;
+  grid.innerHTML = '';
+
+  const total = zsSize * zsSize;
+  zsGrid.forEach((val, idx) => {
+    const tile = document.createElement('div');
+    const tileSize = Math.min(Math.floor((Math.min(window.innerWidth, 400) - 60) / zsSize), 80);
+    tile.style.width  = tileSize + 'px';
+    tile.style.height = tileSize + 'px';
+    tile.style.fontSize = Math.max(14, tileSize * 0.4) + 'px';
+
+    if (val === 0) {
+      tile.className = 'tile empty';
+    } else {
+      tile.className = 'tile num';
+      tile.textContent = val;
+      if (val === idx + 1) tile.classList.add('correct-pos');
+      tile.onclick = () => zsMove(idx);
+    }
+    grid.appendChild(tile);
+  });
+}
+
+function zsMove(idx) {
+  const emptyIdx = zsGrid.indexOf(0);
+  if (!zsNeighbors(idx).includes(emptyIdx)) return;
+
+  [zsGrid[idx], zsGrid[emptyIdx]] = [zsGrid[emptyIdx], zsGrid[idx]];
+  zsMoves++;
+  document.getElementById('zs-moves').textContent = `Züge: ${zsMoves}`;
+  zsRender();
+
+  if (zsIsSolved()) {
+    setTimeout(() => {
+      zsLevel++;
+      if (zsLevel >= ZS_SIZES.length) {
+        zsLevel = 0;
+        showWin(`🏆 Alle Level geschafft! (${zsMoves} Züge)`, () => zsInit());
+      } else {
+        showWin(`✅ Gelöst in ${zsMoves} Zügen!`, () => zsInit());
+      }
+    }, 200);
+  }
+}
+
+function zsIsSolved() {
+  const total = zsSize * zsSize;
+  for (let i = 0; i < total - 1; i++) {
+    if (zsGrid[i] !== i + 1) return false;
+  }
+  return zsGrid[total - 1] === 0;
+}
+</script>
+</body>
+</html>
