@@ -1,49 +1,52 @@
-export type AboStatus = "aktiv" | "inaktiv";
+export type AboStatus = 'aktiv' | 'inaktiv'
 
 export interface Handwerker {
-  id: string;
-  name: string;
-  beruf: string;
-  foto_url: string | null;
-  beschreibung: string | null;
-  stadt: string;
-  latitude: number | null;
-  longitude: number | null;
-  telefon: string | null;
-  email: string;
-  abo_status: AboStatus;
-  erstellt_am: string;
-  dienstleistungen?: Dienstleistung[];
-  bewertungen?: Bewertung[];
+  id: string
+  name: string
+  beruf: string
+  foto_url: string | null
+  beschreibung: string
+  stadt: string
+  latitude: number
+  longitude: number
+  telefon: string
+  email: string
+  abo_status: AboStatus
+  erstellt_am: string
 }
 
 export interface Dienstleistung {
-  id: string;
-  handwerker_id: string;
-  titel: string;
-  beschreibung: string | null;
-  preis_ab: number | null;
+  id: string
+  handwerker_id: string
+  titel: string
+  beschreibung: string
+  preis_ab: number
 }
 
 export interface Bewertung {
-  id: string;
-  handwerker_id: string;
-  sterne: number;
-  kommentar: string | null;
-  erstellt_am: string;
+  id: string
+  handwerker_id: string
+  sterne: number // 1-5
+  kommentar: string | null
+  erstellt_am: string
 }
 
-export const BERUFE = [
-  "Elektriker",
-  "Maler",
-  "Schreiner",
-  "Sanitär",
-  "Gärtner",
-  "Maurer",
-  "Dachdecker",
-  "Schlosser",
-  "Bodenleger",
-  "Gebäudereiniger",
-] as const;
+export interface HandwerkerMitDetails extends Handwerker {
+  dienstleistungen: Dienstleistung[]
+  bewertungen: Bewertung[]
+  durchschnittssterne?: number
+}
 
-export type Beruf = (typeof BERUFE)[number];
+export interface SuchParameter {
+  stadt?: string
+  beruf?: string
+  seite?: number
+  proSeite?: number
+}
+
+export interface SuchErgebnis {
+  handwerker: Handwerker[]
+  gesamt: number
+  seite: number
+  proSeite: number
+}
