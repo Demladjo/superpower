@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Als Handwerker anmelden – HandwerkerHub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">⚒ Handwerker<span>Hub</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Startseite</a>
+        <a href="suche.html">Handwerker finden</a>
+        <a href="registrieren.html" class="btn-primary">Als Handwerker anmelden</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container" style="padding:3rem 1rem;max-width:680px">
+    <div style="text-align:center;margin-bottom:2rem">
+      <h1>Als Handwerker anmelden</h1>
+      <p style="color:#666;margin-top:0.5rem">Erstellen Sie Ihr Profil und werden Sie von Kunden in Ihrer Region gefunden.</p>
+    </div>
+
+    <div class="card" style="padding:2rem" id="formCard">
+      <form id="regForm" onsubmit="submitForm(event)">
+
+        <!-- Konto -->
+        <h2 class="form-section-title">Konto-Informationen</h2>
+        <div class="form-group">
+          <label>Vollständiger Name *</label>
+          <input type="text" name="name" required placeholder="z.B. Thomas Meier" class="input" />
+        </div>
+        <div class="form-group">
+          <label>E-Mail-Adresse *</label>
+          <input type="email" name="email" required placeholder="ihre@email.ch" class="input" />
+        </div>
+        <div class="form-group">
+          <label>Passwort *</label>
+          <input type="password" name="passwort" required minlength="8" placeholder="Mindestens 8 Zeichen" class="input" />
+        </div>
+
+        <!-- Beruf & Standort -->
+        <h2 class="form-section-title" style="margin-top:2rem">Beruf & Standort</h2>
+        <div class="form-group">
+          <label>Beruf *</label>
+          <select name="beruf" required class="input">
+            <option value="">Bitte auswählen</option>
+            <option>Elektriker</option>
+            <option>Maler</option>
+            <option>Schreiner</option>
+            <option>Sanitär</option>
+            <option>Gärtner</option>
+            <option>Maurer</option>
+            <option>Dachdecker</option>
+            <option>Schlosser</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Stadt *</label>
+          <input type="text" name="stadt" required placeholder="z.B. Zürich" class="input" />
+        </div>
+        <div class="form-group">
+          <label>Telefonnummer</label>
+          <input type="tel" name="telefon" placeholder="+41 44 123 45 67" class="input" />
+        </div>
+
+        <!-- Beschreibung -->
+        <h2 class="form-section-title" style="margin-top:2rem">Über mich</h2>
+        <div class="form-group">
+          <label>Beschreibung</label>
+          <textarea name="beschreibung" rows="4" placeholder="Beschreiben Sie Ihre Erfahrung, Spezialisierungen und was Sie von anderen abhebt..." class="input" style="resize:vertical"></textarea>
+        </div>
+
+        <!-- Checkboxen -->
+        <h2 class="form-section-title" style="margin-top:2rem">Gewerbliche Bestätigung *</h2>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" name="cb1" id="cb1" />
+            <span>Ich bestätige, dass ich <strong>selbständig oder gewerblich angemeldet</strong> bin und berechtigt bin, Handwerksleistungen gewerbsmässig anzubieten.</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="cb2" id="cb2" />
+            <span>Ich bin mir bewusst, dass ich <strong>selbst verantwortlich bin für meine Steuern und das Einhalten der Gewerbevorschriften</strong> in der Schweiz. HandwerkerHub übernimmt keine Haftung in diesem Bereich.</span>
+          </label>
+        </div>
+
+        <div id="errorMsg" class="error-msg" style="display:none"></div>
+
+        <button type="submit" class="btn-primary" style="width:100%;padding:0.875rem;font-size:1rem;margin-top:1.5rem">
+          Profil erstellen & weiter zur Zahlung
+        </button>
+
+        <p style="text-align:center;margin-top:1rem;font-size:0.9rem;color:#888">
+          Bereits registriert? <a href="#" style="color:#DC143C">Hier anmelden</a>
+        </p>
+      </form>
+    </div>
+
+    <!-- Erfolg -->
+    <div class="card" id="successCard" style="display:none;padding:3rem;text-align:center">
+      <div style="font-size:3.5rem;margin-bottom:1rem">🎉</div>
+      <h2>Registrierung erfolgreich!</h2>
+      <p style="color:#666;margin:1rem 0">Ihr Profil wurde erstellt. Im nächsten Schritt können Sie Ihr Abonnement aktivieren, um für Kunden sichtbar zu sein.</p>
+      <a href="index.html" class="btn-primary">Zur Startseite</a>
+    </div>
+
+    <p style="text-align:center;font-size:0.8rem;color:#aaa;margin-top:1.5rem">
+      Mit der Registrierung stimmen Sie unseren <a href="#" style="color:#888">AGB</a> und der <a href="#" style="color:#888">Datenschutzerklärung</a> zu.
+    </p>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom">© 2025 HandwerkerHub. Alle Rechte vorbehalten.</div>
+  </footer>
+
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+      const cb1 = document.getElementById('cb1').checked;
+      const cb2 = document.getElementById('cb2').checked;
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (!cb1 || !cb2) {
+        errorMsg.textContent = 'Bitte bestätigen Sie beide Pflichtangaben zur gewerblichen Tätigkeit.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+      errorMsg.style.display = 'none';
+      document.getElementById('formCard').style.display = 'none';
+      document.getElementById('successCard').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

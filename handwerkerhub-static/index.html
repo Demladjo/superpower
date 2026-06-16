@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HandwerkerHub – Handwerker in der Schweiz finden</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">⚒ Handwerker<span>Hub</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Startseite</a>
+        <a href="suche.html">Handwerker finden</a>
+        <a href="registrieren.html" class="btn-primary">Als Handwerker anmelden</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <h1>Finden Sie den richtigen <span class="red">Handwerker</span><br>in Ihrer Nähe</h1>
+      <p class="hero-sub">Verbinden Sie sich mit geprüften Handwerkern in der Schweiz. Kostenlos suchen und direkt Kontakt aufnehmen.</p>
+      <form class="search-bar" action="suche.html" method="get">
+        <input type="text" name="stadt" placeholder="Stadt (z.B. Zürich, Bern, Basel)" />
+        <select name="beruf">
+          <option value="">Alle Berufe</option>
+          <option>Elektriker</option>
+          <option>Maler</option>
+          <option>Schreiner</option>
+          <option>Sanitär</option>
+          <option>Gärtner</option>
+          <option>Maurer</option>
+          <option>Dachdecker</option>
+          <option>Schlosser</option>
+        </select>
+        <button type="submit" class="btn-primary">Suchen</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Berufe -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Beliebte Berufe</h2>
+      <div class="berufe-grid">
+        <a href="suche.html?beruf=Elektriker" class="beruf-card">⚡<br>Elektriker</a>
+        <a href="suche.html?beruf=Maler" class="beruf-card">🎨<br>Maler</a>
+        <a href="suche.html?beruf=Schreiner" class="beruf-card">🪵<br>Schreiner</a>
+        <a href="suche.html?beruf=Sanitär" class="beruf-card">🔧<br>Sanitär</a>
+        <a href="suche.html?beruf=Gärtner" class="beruf-card">🌿<br>Gärtner</a>
+        <a href="suche.html?beruf=Maurer" class="beruf-card">🧱<br>Maurer</a>
+        <a href="suche.html?beruf=Dachdecker" class="beruf-card">🏠<br>Dachdecker</a>
+        <a href="suche.html?beruf=Schlosser" class="beruf-card">🔒<br>Schlosser</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Karte Platzhalter -->
+  <section class="section bg-light">
+    <div class="container">
+      <h2 class="section-title">Handwerker auf der Karte</h2>
+      <p class="section-sub">Entdecken Sie Handwerker in Ihrer Region</p>
+      <div class="map-placeholder">
+        <div>
+          <div style="font-size:3rem">🗺️</div>
+          <p><strong>Interaktive Karte</strong></p>
+          <p style="font-size:0.85rem;margin-top:4px">Wird nach Mapbox-Konfiguration angezeigt</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wie es funktioniert -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">So funktioniert HandwerkerHub</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">🔍</div>
+          <div class="step-nr">Schritt 1</div>
+          <h3>Handwerker suchen</h3>
+          <p>Geben Sie Ihre Stadt und den gewünschten Beruf ein und finden Sie passende Handwerker in Ihrer Nähe.</p>
+        </div>
+        <div class="step">
+          <div class="step-icon">👤</div>
+          <div class="step-nr">Schritt 2</div>
+          <h3>Profil ansehen</h3>
+          <p>Lesen Sie Bewertungen, sehen Sie Dienstleistungen und Preise und wählen Sie den passenden Handwerker aus.</p>
+        </div>
+        <div class="step">
+          <div class="step-icon">📞</div>
+          <div class="step-nr">Schritt 3</div>
+          <h3>Direkt Kontakt aufnehmen</h3>
+          <p>Kontaktieren Sie den Handwerker direkt per Telefon oder E-Mail — ohne Umwege über die Plattform.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container" style="text-align:center">
+      <h2 style="color:#fff;font-size:1.8rem;margin-bottom:0.5rem">Sie sind Handwerker?</h2>
+      <p style="color:rgba(255,255,255,0.85);margin-bottom:1.5rem">Erstellen Sie Ihr Profil und werden Sie von Kunden in Ihrer Region gefunden. Ab CHF 29/Monat.</p>
+      <a href="registrieren.html" class="btn-white">Jetzt anmelden</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="footer-logo">⚒ HandwerkerHub</div>
+        <p>Die Vermittlungsplattform für Handwerker und Kunden in der Schweiz.</p>
+      </div>
+      <div>
+        <h4>Links</h4>
+        <ul>
+          <li><a href="suche.html">Handwerker finden</a></li>
+          <li><a href="registrieren.html">Als Handwerker anmelden</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Rechtliches</h4>
+        <ul>
+          <li><a href="#">Datenschutz</a></li>
+          <li><a href="#">AGB</a></li>
+          <li><a href="#">Impressum</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 HandwerkerHub. Alle Rechte vorbehalten.</div>
+  </footer>
+
+</body>
+</html>

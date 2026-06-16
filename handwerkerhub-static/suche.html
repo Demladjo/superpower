@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Handwerker suchen – HandwerkerHub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">⚒ Handwerker<span>Hub</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Startseite</a>
+        <a href="suche.html">Handwerker finden</a>
+        <a href="registrieren.html" class="btn-primary">Als Handwerker anmelden</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container" style="padding:2rem 1rem">
+    <h1 class="page-title">Handwerker suchen</h1>
+
+    <div class="suche-layout">
+      <!-- Filter -->
+      <aside class="filter-box">
+        <h2>Filter</h2>
+        <form action="suche.html" method="get">
+          <div class="form-group">
+            <label>Stadt</label>
+            <input type="text" name="stadt" placeholder="z.B. Zürich" class="input" />
+          </div>
+          <div class="form-group">
+            <label>Beruf</label>
+            <select name="beruf" class="input">
+              <option value="">Alle Berufe</option>
+              <option>Elektriker</option>
+              <option>Maler</option>
+              <option>Schreiner</option>
+              <option>Sanitär</option>
+              <option>Gärtner</option>
+              <option>Maurer</option>
+              <option>Dachdecker</option>
+              <option>Schlosser</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%">Filtern</button>
+        </form>
+      </aside>
+
+      <!-- Ergebnisse + Karte -->
+      <div style="flex:1">
+        <div class="results-layout">
+          <!-- Liste -->
+          <div style="flex:1">
+            <p class="results-count">3 Handwerker gefunden</p>
+
+            <a href="profil.html" class="handwerker-card">
+              <div class="hw-avatar">T</div>
+              <div class="hw-info">
+                <div class="hw-header">
+                  <div>
+                    <strong>Thomas Meier</strong>
+                    <span class="badge">Elektriker</span>
+                  </div>
+                  <div class="stars">★★★★★</div>
+                </div>
+                <p class="hw-ort">📍 Zürich</p>
+                <p class="hw-desc">15 Jahre Erfahrung im Bereich Elektroinstallationen für Privat und Gewerbe.</p>
+              </div>
+            </a>
+
+            <a href="profil.html" class="handwerker-card">
+              <div class="hw-avatar" style="background:#fde8ec">S</div>
+              <div class="hw-info">
+                <div class="hw-header">
+                  <div>
+                    <strong>Sandra Keller</strong>
+                    <span class="badge">Malerin</span>
+                  </div>
+                  <div class="stars">★★★★<span style="color:#ddd">★</span></div>
+                </div>
+                <p class="hw-ort">📍 Bern</p>
+                <p class="hw-desc">Professionelle Malerarbeiten – Innen und Aussen.</p>
+              </div>
+            </a>
+
+            <a href="profil.html" class="handwerker-card">
+              <div class="hw-avatar" style="background:#e8f5e9">M</div>
+              <div class="hw-info">
+                <div class="hw-header">
+                  <div>
+                    <strong>Marco Schneider</strong>
+                    <span class="badge">Schreiner</span>
+                  </div>
+                  <div class="stars">★★★★★</div>
+                </div>
+                <p class="hw-ort">📍 Basel</p>
+                <p class="hw-desc">Massanfertigungen und Reparaturen aller Art.</p>
+              </div>
+            </a>
+          </div>
+
+          <!-- Karte -->
+          <div class="map-placeholder map-small">
+            <div>
+              <div style="font-size:2.5rem">🗺️</div>
+              <p><strong>Kartenansicht</strong></p>
+              <p style="font-size:0.8rem">Nach Mapbox-Konfiguration</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-bottom">© 2025 HandwerkerHub. Alle Rechte vorbehalten.</div>
+  </footer>
+
+</body>
+</html>
