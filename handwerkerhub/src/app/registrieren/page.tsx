@@ -59,8 +59,8 @@ export default function RegistrierenPage() {
           Registrierung erfolgreich!
         </h1>
         <p className="text-gray-600 mb-6">
-          Ihr Profil wurde erstellt. Im nächsten Schritt können Sie Ihr
-          Abonnement aktivieren, um für Kunden sichtbar zu sein.
+          Ihr Profil wurde erstellt. Im nächsten Schritt können Sie Ihr Abonnement
+          aktivieren, um für Kunden sichtbar zu sein.
         </p>
         <Link href="/" className="btn-primary">
           Zur Startseite
@@ -72,12 +72,9 @@ export default function RegistrierenPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Als Handwerker anmelden
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900">Als Handwerker anmelden</h1>
         <p className="text-gray-600 mt-2">
-          Erstellen Sie Ihr Profil und werden Sie von Kunden in Ihrer Region
-          gefunden.
+          Erstellen Sie Ihr Profil und werden Sie von Kunden in Ihrer Region gefunden.
         </p>
       </div>
 
@@ -226,9 +223,8 @@ export default function RegistrierenPage() {
                 />
                 <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
                   Ich bestätige, dass ich{" "}
-                  <strong>selbständig oder gewerblich angemeldet</strong> bin
-                  und berechtigt bin, Handwerksleistungen gewerbsmässig
-                  anzubieten.
+                  <strong>selbständig oder gewerblich angemeldet</strong> bin und
+                  berechtigt bin, Handwerksleistungen gewerbsmässig anzubieten.
                 </span>
               </label>
               <label className="flex items-start gap-3 cursor-pointer group">
@@ -242,11 +238,11 @@ export default function RegistrierenPage() {
                 <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
                   Ich bin mir bewusst, dass ich{" "}
                   <strong>
-                    selbst verantwortlich bin für meine Steuern und das
-                    Einhalten der Gewerbevorschriften
+                    selbst verantwortlich bin für meine Steuern und das Einhalten
+                    der Gewerbevorschriften
                   </strong>{" "}
-                  in der Schweiz. HandwerkerHub übernimmt keine Haftung in
-                  diesem Bereich.
+                  in der Schweiz. HandwerkerHub übernimmt keine Haftung in diesem
+                  Bereich.
                 </span>
               </label>
             </div>
@@ -258,16 +254,16 @@ export default function RegistrierenPage() {
             </div>
           )}
 
-          <button type="submit" className="btn-primary w-full py-3 text-base">
+          <button
+            type="submit"
+            className="btn-primary w-full py-3 text-base"
+          >
             Profil erstellen & weiter zur Zahlung
           </button>
 
           <p className="text-center text-sm text-gray-500">
             Bereits registriert?{" "}
-            <Link
-              href="/login"
-              className="text-primary-500 hover:underline font-medium"
-            >
+            <Link href="/login" className="text-primary-500 hover:underline font-medium">
               Hier anmelden
             </Link>
           </p>
@@ -276,14 +272,8 @@ export default function RegistrierenPage() {
 
       <p className="text-center text-xs text-gray-400 mt-6">
         Mit der Registrierung stimmen Sie unseren{" "}
-        <Link href="/agb" className="hover:underline">
-          AGB
-        </Link>{" "}
-        und der{" "}
-        <Link href="/datenschutz" className="hover:underline">
-          Datenschutzerklärung
-        </Link>{" "}
-        zu.
+        <Link href="/agb" className="hover:underline">AGB</Link> und der{" "}
+        <Link href="/datenschutz" className="hover:underline">Datenschutzerklärung</Link> zu.
       </p>
     </div>
   );

@@ -52,10 +52,12 @@ ALTER TABLE dienstleistungen ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bewertungen ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies: handwerker
+-- Alle können aktive Handwerker lesen
 CREATE POLICY "Aktive Handwerker sind öffentlich lesbar"
   ON handwerker FOR SELECT
   USING (abo_status = 'aktiv');
 
+-- Handwerker kann sein eigenes Profil bearbeiten (via auth.uid() = id später)
 CREATE POLICY "Handwerker kann eigenes Profil erstellen"
   ON handwerker FOR INSERT
   WITH CHECK (true);
