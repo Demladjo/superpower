@@ -10,7 +10,9 @@ sichere Zuordnungen.
 import struct, warnings, openpyxl
 warnings.filterwarnings("ignore")
 
-PARAM_SHEETS = ["Einstellrichtwerte", "Aggregat 2"]
+# Laut Vorgabe wird NUR das Blatt "Einstellrichtwerte" befuellt
+# (nicht Infos, Aggregat 2, Ruesthilfe ...).
+PARAM_SHEETS = ["Einstellrichtwerte"]
 
 def _encoders():
     def i16(v):
