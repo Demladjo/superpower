@@ -1,0 +1,42 @@
+name: ERW-Generator Windows-Build
+
+# Baut aus arburg-erw/app.py eine fertige Windows-.exe und stellt sie als
+# Download (Artifact) bereit. Laeuft bei Aenderungen im Ordner arburg-erw/
+# oder manuell ueber "Run workflow".
+
+on:
+  push:
+    paths:
+      - 'arburg-erw/**'
+      - '.github/workflows/build-erw-windows.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: arburg-erw
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: PyInstaller installieren
+        run: pip install pyinstaller
+
+      - name: Windows-Programm bauen
+        run: >
+          pyinstaller --onefile --windowed --name "ERW-Generator"
+          --paths .
+          --add-data "templates/ERW_Vorlage.xlsm;templates"
+          app.py
+
+      - name: Programm als Download bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: ERW-Generator-Windows
+          path: arburg-erw/dist/ERW-Generator.exe
+          if-no-files-found: error

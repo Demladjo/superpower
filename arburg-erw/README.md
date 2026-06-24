@@ -34,8 +34,9 @@ ERW kommt heraus.
 | Verlustfreier Excel-Schreiber (Makros/ActiveX/Diagramme bleiben heil) | ✅ fertig & getestet |
 | Excel-Vorlage + Zielzellen erkannt (Blatt „Einstellrichtwerte") | ✅ |
 | Trennung Maschinenwerte / Auftragsinfos / Verschlauchung | ✅ geklärt |
-| Auslesen der Parameter aus der `.arb` | 🚧 im Aufbau – **braucht mehr Beispiele** |
-| Windows-Programm (Verpackung) | ⏳ später (PyInstaller) |
+| Auslesen aus der `.arb`: Schnecken-Ø + Zylindertemperaturen | ✅ erste Version (auf 2 Beispielen korrekt) |
+| Auslesen der restlichen markierten Felder | 🚧 braucht mehr Beispiele |
+| Windows-Programm (.exe-Build via GitHub Actions) | ✅ eingerichtet |
 
 **Warum „braucht mehr Beispiele"?** Das `.arb`-Format ist herstellereigen. Die
 Werte *stehen* in der Datei (nachgewiesen), aber die Parameterblöcke liegen je
@@ -49,6 +50,24 @@ Auswertung der bisher 2 Beispiele:
 (Dichte, Gewichte, Materialnummer stehen nicht in der `.arb` → bleiben manuell.)
 
 ---
+
+## Windows-Programm benutzen
+
+Das fertige Programm (`ERW-Generator.exe`) wird automatisch von GitHub gebaut:
+
+1. Auf GitHub im Reiter **Actions** den Lauf **„ERW-Generator Windows-Build"** öffnen.
+2. Unten unter **Artifacts** **`ERW-Generator-Windows`** herunterladen und entpacken.
+3. `ERW-Generator.exe` starten – entweder Datei über den Knopf wählen **oder eine
+   `.arb`-Datei direkt auf die `.exe` ziehen**. Das fertige ERW wird daneben
+   gespeichert (`…_ERW.xlsm`).
+
+> Vorschau-Version: füllt Schnecken-Ø und Zylindertemperaturen. Weitere Felder
+> kommen mit mehr Beispielen dazu.
+
+Lokal/zum Testen ohne .exe:
+```
+python -m arburg_erw.fill_erw  PROGRAMM.arb  AUSGABE.xlsm
+```
 
 ## Aufbau
 
