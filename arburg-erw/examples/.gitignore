@@ -1,0 +1,6 @@
+# Echte Beispiel-Daten (Auftrags-/Personendaten) NICHT committen:
+*.arb
+*_Produktion_*.xlsm
+ausgabe/
+out/
+*.out.xlsm
