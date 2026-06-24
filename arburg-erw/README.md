@@ -10,6 +10,23 @@ ERW kommt heraus.
 
 ---
 
+## Abgestimmte Entscheidungen (mit dem Einrichter)
+
+- Es wird **nur** das Blatt **„Einstellrichtwerte"** befüllt (nicht Infos,
+  Aggregat 2, Rüsthilfe).
+- Befüllt werden genau die im Foto **markierten Felder** + **Kavitätenanzahl**.
+- **Verschlauchung** (E1/A1, Kreise) und **Auftragsinfos** bleiben leer.
+- **Heißkanal** nur, wenn das Programm einen hat – sonst leer.
+- **IST-Werte** (Massepolster, Einspritz-/Umschaltdruck, Einspritz-/Dosier-/
+  Zykluszeit): aus den **Überwachungs-Sollwerten** füllen (dürfen minimal vom
+  gemessenen Wert abweichen).
+- **Materialdichte, Gewichte, Materialnummer**: bleiben **manuell** (nicht im
+  Programm gespeichert).
+- Steuerung: zuerst **Arburg** (`.arb`), **Engel** später.
+- Auslieferung: **Windows-Programm**.
+
+---
+
 ## Aktueller Stand (ehrlich)
 
 | Teil | Stand |
